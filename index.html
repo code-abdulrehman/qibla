@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Qibla Direction App</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -10,78 +10,39 @@
   <div class="bg-white p-8 rounded shadow-md text-center w-full max-w-md">
     <h1 class="text-2xl font-bold mb-4">🧭 Qibla Direction</h1>
     <p class="text-gray-600 mb-4">Click below to detect your location and find Qibla direction.</p>
-
-    <div class="flex flex-col gap-3 mb-4">
-      <button id="getDirectionBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-        One-time Qibla Direction
-      </button>
-      <button id="liveDirectionBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-        Live Qibla Direction
-      </button>
-    </div>
+    
+    <button id="getDirectionBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4">
+      Find Qibla Direction
+    </button>
 
     <div id="loading" class="text-gray-500 mb-4 hidden">Detecting location...</div>
+
     <div id="error" class="text-red-500 mb-4 hidden"></div>
 
     <div id="compassContainer" class="mt-4 hidden">
       <img id="compassImage" class="mx-auto w-64 h-64" alt="Qibla Compass">
-      <p class="mt-2 text-sm text-gray-500">Qibla direction based on your current location.</p>
+      <p class="mt-2 text-sm text-gray-500">Qibla direction based on your location.</p>
     </div>
   </div>
 
   <script>
     const button = document.getElementById('getDirectionBtn');
-    const liveButton = document.getElementById('liveDirectionBtn');
     const compassImage = document.getElementById('compassImage');
     const compassContainer = document.getElementById('compassContainer');
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
 
-    let watchId = null;
-
     button.addEventListener('click', () => {
-      stopLiveTracking();
-      getQiblaDirectionOnce();
-    });
-
-    liveButton.addEventListener('click', () => {
-      startLiveTracking();
-    });
-
-    function getQiblaDirectionOnce() {
       error.classList.add('hidden');
       compassContainer.classList.add('hidden');
       loading.classList.remove('hidden');
-
+      
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, showError);
       } else {
         showError({ message: "Geolocation is not supported by this browser." });
       }
-    }
-
-    function startLiveTracking() {
-      error.classList.add('hidden');
-      compassContainer.classList.add('hidden');
-      loading.classList.remove('hidden');
-
-      if (navigator.geolocation) {
-        watchId = navigator.geolocation.watchPosition(success, showError, {
-          enableHighAccuracy: true,
-          maximumAge: 0,
-          timeout: 5000
-        });
-      } else {
-        showError({ message: "Geolocation is not supported by this browser." });
-      }
-    }
-
-    function stopLiveTracking() {
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-      }
-    }
+    });
 
     function success(position) {
       const latitude = position.coords.latitude;
@@ -103,7 +64,6 @@
       loading.classList.add('hidden');
       error.textContent = err.message;
       error.classList.remove('hidden');
-      compassContainer.classList.add('hidden');
     }
   </script>
 </body>
